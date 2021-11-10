@@ -9,8 +9,7 @@ import java.util.Random;
 public class BoatGUI
 {
     private Boat boat = new Boat();
-
-    private JComponent image;
+    private JPanel picture;
     private Graphics g;
 
     private void Draw()
@@ -27,11 +26,11 @@ public class BoatGUI
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Создание окна, где будет рисоваться изображение
-        image = new Image();
-        image.setSize(675, 488);
-        image.setBackground(Color.WHITE);
-        image.setLocation(0, 0);
-        image.setVisible(true);
+        picture = new JPanel();
+        picture.setSize(675, 488);
+        picture.setBackground(Color.WHITE);
+        picture.setLocation(0, 0);
+        picture.setVisible(true);
 
         // Создание кнопки "Create"
         JButton buttonCreate = new JButton("Create");
@@ -45,13 +44,13 @@ public class BoatGUI
         {
             public void actionPerformed(ActionEvent e)
             {
-                g = image.getGraphics();
-                image.update(g);
+                g = picture.getGraphics();
+                picture.update(g);
                 Random rnd = new Random();
                 boat.init(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000,
-                        new Color(240, 230, 140), new Color(0, 191, 255), true, true, true, true, 10);
+                        new Color(240, 230, 140), new Color(0, 191, 255), true, true, true, true, 1);
                 boat.setPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10,
-                        image.getWidth(), image.getHeight());
+                        picture.getWidth(), picture.getHeight());
                 Draw();
             }
         });
@@ -71,7 +70,7 @@ public class BoatGUI
             {
                 try
                 {
-                    image.update(g);
+                    picture.update(g);
                     boat.moveTransport(Direction.Up);
                     Draw();
                 } catch (Exception ex)
@@ -97,7 +96,7 @@ public class BoatGUI
             {
                 try
                 {
-                    image.update(g);
+                    picture.update(g);
                     boat.moveTransport(Direction.Down);
                     Draw();
                 } catch (Exception ex)
@@ -123,7 +122,7 @@ public class BoatGUI
             {
                 try
                 {
-                    image.update(g);
+                    picture.update(g);
                     boat.moveTransport(Direction.Right);
                     Draw();
                 } catch (Exception ex)
@@ -149,7 +148,7 @@ public class BoatGUI
             {
                 try
                 {
-                    image.update(g);
+                    picture.update(g);
                     boat.moveTransport(Direction.Left);
                     Draw();
                 } catch (Exception ex)
@@ -165,7 +164,7 @@ public class BoatGUI
         frame.add(buttonMoveDown);
         frame.add(buttonMoveRight);
         frame.add(buttonMoveLeft);
-        frame.add(image);
+        frame.add(picture);
 
         frame.setVisible(true);
     }
