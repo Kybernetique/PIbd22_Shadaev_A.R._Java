@@ -1,19 +1,29 @@
 import java.awt.*;
+import java.awt.image.*;
 import javax.swing.*;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import java.util.Random;
+import java.util.*;
 
 // Создание формы
 public class BoatGUI
 {
-    private ITransport boat;
-    private JPanel picture;
-    private Graphics g;
+    ITransport boat;
+    MyImage myImage;
+    BufferedImage bufferedImage;
+    Graphics g;
 
-    private void Draw()
+    private void draw()
     {
+        g = bufferedImage.createGraphics();
+        g.setColor(Color.WHITE);
+        g.fillRect(0,0, myImage.getWidth(), myImage.getHeight());
         boat.drawTransport(g);
+        myImage.image = bufferedImage;
+        myImage.repaint();
+    }
+
+    public void SetBoat(ITransport boat) {
+        this.boat = boat;
+        draw();
     }
 
     public BoatGUI()
@@ -22,14 +32,17 @@ public class BoatGUI
         JFrame frame = new JFrame("Boat");
         frame.setLayout(null);
         frame.setSize(900, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Создание окна, где будет рисоваться изображение
-        picture = new JPanel();
-        picture.setSize(674, 450);
-        picture.setBackground(Color.WHITE);
-        picture.setLocation(0, 0);
-        picture.setVisible(true);
+        myImage = new MyImage();
+
+        myImage.setSize(674, 450);
+        myImage.setBackground(Color.WHITE);
+        myImage.setLocation(0, 0);
+        myImage.setVisible(true);
+
+        bufferedImage = new BufferedImage(myImage.getWidth(), myImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 
         // Создание кнопки "Boat"
         JButton buttonBoat = new JButton("Boat");
@@ -41,14 +54,14 @@ public class BoatGUI
         // Обработка нажатия кнопки "Boat"
         buttonBoat.addActionListener(e ->
         {
-            g = picture.getGraphics();
-            picture.update(g);
+/*            g = image.getGraphics();
+            image.update(g);*/
             Random rnd = new Random();
-            boat = new Boat(1000, rnd.nextInt(1000) + 1000,
+            boat = new Boat(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000,
                     Color.CYAN);
             boat.setPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10,
-                    picture.getWidth(), picture.getHeight());
-            Draw();
+                    myImage.getWidth(), myImage.getHeight());
+            draw();
         });
 
         // Создание кнопки "Sailboat"
@@ -61,15 +74,17 @@ public class BoatGUI
         // Обработка нажатия кнопки "Sailboat"
         buttonSailboat.addActionListener(e ->
         {
-            g = picture.getGraphics();
-            picture.update(g);
+/*            g = image.getGraphics();
+            image.update(g);*/
             Random rnd = new Random();
-            boat = new Sailboat(1000, rnd.nextInt(1000) + 1000,
+            boat = new Sailboat(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000,
                     new Color(0, 191, 255), new Color(0, 255, 255), true, true, true, true, rnd.nextInt(3) + 1, rnd.nextInt(2) + 1);
             boat.setPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10,
-                    picture.getWidth(), picture.getHeight());
-            Draw();
+                    myImage.getWidth(), myImage.getHeight());
+            draw();
         });
+
+
 
         // Создание стрелки вверх
         JButton buttonMoveUp = new JButton();
@@ -84,9 +99,9 @@ public class BoatGUI
         {
             try
             {
-                picture.update(g);
+                myImage.update(g);
                 boat.moveTransport(Direction.Up);
-                Draw();
+                draw();
             } catch (Exception ex)
             {
                 JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
@@ -107,9 +122,9 @@ public class BoatGUI
         {
             try
             {
-                picture.update(g);
+                myImage.update(g);
                 boat.moveTransport(Direction.Down);
-                Draw();
+                draw();
             } catch (Exception ex)
             {
                 JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
@@ -130,9 +145,9 @@ public class BoatGUI
         {
             try
             {
-                picture.update(g);
+                myImage.update(g);
                 boat.moveTransport(Direction.Right);
-                Draw();
+                draw();
             } catch (Exception ex)
             {
                 JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
@@ -153,9 +168,9 @@ public class BoatGUI
         {
             try
             {
-                picture.update(g);
+                myImage.update(g);
                 boat.moveTransport(Direction.Left);
-                Draw();
+                draw();
             } catch (Exception ex)
             {
                 JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
@@ -169,7 +184,7 @@ public class BoatGUI
         frame.add(buttonMoveDown);
         frame.add(buttonMoveRight);
         frame.add(buttonMoveLeft);
-        frame.add(picture);
+        frame.add(myImage);
 
         frame.setVisible(true);
     }

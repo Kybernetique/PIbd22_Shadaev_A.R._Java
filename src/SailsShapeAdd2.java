@@ -24,10 +24,10 @@ public class SailsShapeAdd2 implements InterAdd
     @Override
     public void draw(Graphics2D g2D, Color color, int x, int y)
     {
+        g2D.setColor(Color.BLACK);
         switch (sails)
         {
-            case One: // OK
-                g2D.setColor(Color.BLACK);
+            case One:
                 g2D.drawLine(x + 20, y + 10, x + 90, y + 10);
                 g2D.drawLine(x + 20, y + 10, x + 20, y + 30);
 
@@ -39,7 +39,6 @@ public class SailsShapeAdd2 implements InterAdd
                 g2D.drawLine(x + 90, y + 10, x + 90, y + 30);
                 break;
             case Two:
-                g2D.setColor(Color.BLACK);
                 g2D.drawLine(x + 20, y + 10, x + 90, y + 10);
                 g2D.drawLine(x + 20, y + 10, x + 20, y + 30);
 

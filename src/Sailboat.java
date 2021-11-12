@@ -3,7 +3,9 @@ import java.awt.*;
 public class Sailboat extends Boat
 {
     // Дополнительный класс для отрисовки парусов (усложн.)
+    SailsAdd sailsAdd;
     InterAdd interAdd;
+
 
     // Дополнительный цвет
     private Color SecondaryColor;
@@ -85,6 +87,9 @@ public class Sailboat extends Boat
                     boolean anchor, boolean sails, int sailsNum, int sailsShape)
     {
         super(maxSpeed, weight, mainColor, 200, 40);
+
+        sailsAdd = new SailsAdd();
+        sailsAdd.setSails(sailsNum);
         switch (sailsShape)
         {
             case 1: // Vertical
@@ -92,9 +97,6 @@ public class Sailboat extends Boat
                 break;
             case 2: // Horizontal
                 interAdd = new SailsShapeAdd2();
-                break;
-            case 3:
-                interAdd = new SailsAdd();
                 break;
         }
         interAdd.setSails(sailsNum);
@@ -104,6 +106,7 @@ public class Sailboat extends Boat
         this.Back = back;
         this.Anchor = anchor;
         this.Sails = sails;
+
     }
 
     @Override
@@ -120,7 +123,7 @@ public class Sailboat extends Boat
 
             // Массив точек для заливки границ передней части
             int[] ptsFrontX = {
-                    _startPosX + 200, _startPosX + 150, _startPosX + 160, _startPosX + 150
+                    _startPosX + 190, _startPosX + 150, _startPosX + 150, _startPosX + 150
             };
             int[] ptsFrontY = {
                     _startPosY + 20, _startPosY + 15, _startPosY + 20, _startPosY + 25
@@ -131,9 +134,9 @@ public class Sailboat extends Boat
 
             // Отрисовка границ передней части
             g2D.setColor(Color.BLACK);
-            g2D.drawLine(_startPosX + 160, _startPosY + 20, _startPosX + 200, _startPosY + 20);
-            g2D.drawLine(_startPosX + 200, _startPosY + 20, _startPosX + 150, _startPosY + 15);
-            g2D.drawLine(_startPosX + 200, _startPosY + 20, _startPosX + 150, _startPosY + 25);
+            g2D.drawLine(_startPosX + 150, _startPosY + 20, _startPosX + 190, _startPosY + 20);
+            g2D.drawLine(_startPosX + 190, _startPosY + 20, _startPosX + 140, _startPosY + 15);
+            g2D.drawLine(_startPosX + 190, _startPosY + 20, _startPosX + 140, _startPosY + 25);
         }
 
         // Задняя часть лодки
@@ -164,6 +167,7 @@ public class Sailboat extends Boat
         // Паруса
         if (Sails)
         {
+            sailsAdd.draw(g2D, SecondaryColor, _startPosX, _startPosY);
             interAdd.draw(g2D, SecondaryColor, _startPosX, _startPosY);
         }
     }

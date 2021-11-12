@@ -4,6 +4,7 @@ public class Main
     public static void main(String[] args)
     {
         // Создание формы
-        BoatGUI form = new BoatGUI();
+        HarborGUI form = new HarborGUI();
+
     }
 }
