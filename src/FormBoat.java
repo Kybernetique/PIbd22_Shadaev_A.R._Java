@@ -1,7 +1,7 @@
-import java.awt.*;
-import java.awt.image.*;
 import javax.swing.*;
-import java.util.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 
 // Создание формы
 public class FormBoat
@@ -16,13 +16,14 @@ public class FormBoat
     {
         g = bufferedImage.createGraphics();
         g.setColor(Color.WHITE);
-        g.fillRect(0,0, myImage.getWidth(), myImage.getHeight());
+        g.fillRect(0, 0, myImage.getWidth(), myImage.getHeight());
         boat.drawTransport(g);
         myImage.image = bufferedImage;
         myImage.repaint();
     }
 
-    public void setBoat(ITransport boat) {
+    public void setBoat(ITransport boat)
+    {
         this.boat = boat;
         draw();
     }

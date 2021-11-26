@@ -1,9 +1,7 @@
+import sun.misc.Queue;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Random;
-
-import sun.misc.Queue;
 
 
 public class FormHarbor
@@ -118,60 +116,23 @@ public class FormHarbor
             }
         });
 
+        JButton buttonCreateBoat = new JButton("Create Boat");
+        buttonCreateBoat.setBackground(Color.WHITE);
+        buttonCreateBoat.setLocation(680, 295);
+        buttonCreateBoat.setSize(140, 50);
+        buttonCreateBoat.setVisible(true);
+
+        buttonCreateBoat.addActionListener(e ->
+        {
+            FormBoatConfig Form = new FormBoatConfig(Main.form);
+        });
+
         // Создание кнопки "Set Boat"
         JButton buttonSetBoat = new JButton("Set Boat");
         buttonSetBoat.setBackground(Color.WHITE);
         buttonSetBoat.setLocation(680, 295);
         buttonSetBoat.setSize(140, 24);
         buttonSetBoat.setVisible(true);
-
-        // Обработка нажатия кнопки "Set Boat", позволяющий создать и поставить лодку
-        buttonSetBoat.addActionListener(e ->
-        {
-            Color mColor = JColorChooser.showDialog(frame, "Color Chooser", Color.green);
-            if (mColor != null)
-            {
-                Boat boat = new Boat(100, 1000, mColor);
-                int num = harbor.add(boat);
-                if (num != -1)
-                {
-                    draw();
-                } else
-                {
-                    JOptionPane.showMessageDialog(frame, "Harbor is Full!");
-                }
-            }
-        });
-
-        // Создание кнопки "Set Sailboat"
-        JButton buttonSetSailboat = new JButton("Set Sailboat");
-        buttonSetSailboat.setBackground(Color.WHITE);
-        buttonSetSailboat.setLocation(680, 328);
-        buttonSetSailboat.setSize(140, 24);
-        buttonSetSailboat.setVisible(true);
-
-        // Обработка нажатия кнопки "Set Sailboat", позволяющий создать и поставить лодку
-        buttonSetSailboat.addActionListener(e ->
-        {
-            Color mainColor = JColorChooser.showDialog(frame, "Color Chooser", Color.green);
-            Color secondaryColor = JColorChooser.showDialog(frame, "Color Chooser", Color.red);
-            Random rnd = new Random();
-            if (mainColor != null)
-            {
-                if (secondaryColor != null)
-                {
-                    Sailboat sailboat = new Sailboat(1000, rnd.nextInt(1000) + 1000,
-                            mainColor, secondaryColor, true, true, true, true, 3, rnd.nextInt(2) + 1);
-                    if (harbor.add(sailboat) != -1)
-                    {
-                        draw();
-                    } else
-                    {
-                        JOptionPane.showMessageDialog(frame, "Harbor is Full!");
-                    }
-                }
-            }
-        });
 
         // Создание лейбла "Take Boat"
         JLabel labelTakeBoat = new JLabel("Take Boat");
@@ -257,8 +218,7 @@ public class FormHarbor
         frame.add(buttonAddHarbor);
         frame.add(buttonDelHarbor);
         frame.add(listBoxHarbor);
-        frame.add(buttonSetBoat);
-        frame.add(buttonSetSailboat);
+        frame.add(buttonCreateBoat);
         frame.add(labelTakeBoat);
         frame.add(labelPlace);
         frame.add(textFieldPlace);
@@ -270,5 +230,21 @@ public class FormHarbor
         frame.setVisible(true);
 
         harbor = new Harbor<>(myImage.getWidth(), myImage.getHeight());
+    }
+
+    public void addBoat(Vehicle boat)
+    {
+        if (boat != null)
+        {
+            int index = harbor.add(boat);
+            if (index > -1)
+            {
+                draw();
+            } else
+            {
+                JOptionPane.showMessageDialog(null, "Harbor Is Full!");
+            }
+            draw();
+        }
     }
 }

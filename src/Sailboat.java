@@ -95,15 +95,15 @@ public class Sailboat extends Boat
         {
             case 1: // Number
                 interAdd = new SailsNum();
-                interAdd.setSails(sailsNumAndShape);
+                interAdd.setSailsNumAndShape(sailsNumAndShape);
                 break;
             case 2: // Vertical
                 interAdd = new SailsShapeVertical();
-                interAdd.setSails(sailsNumAndShape);
+                interAdd.setSailsNumAndShape(sailsNumAndShape);
                 break;
             case 3: // Horizontal
                 interAdd = new SailsShapeHorizontal();
-                interAdd.setSails(sailsNumAndShape);
+                interAdd.setSailsNumAndShape(sailsNumAndShape);
                 break;
         }
     }

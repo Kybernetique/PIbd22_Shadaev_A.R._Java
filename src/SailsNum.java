@@ -1,12 +1,12 @@
 import java.awt.*;
 
-// Дополнительный класс для отрисовки количества парусов (усложн.)
+// Дополнительный класс для отрисовки парусов (усложн.)
 public class SailsNum implements InterAdd
 {
     private Sails sails;
 
     @Override
-    public void setSails(int num)
+    public void setSailsNumAndShape(int num)
     {
         switch (num)
         {

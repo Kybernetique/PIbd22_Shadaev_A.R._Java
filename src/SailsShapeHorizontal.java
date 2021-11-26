@@ -1,12 +1,11 @@
 import java.awt.*;
 
-// Класс, делающий форму парусов в виде горизонтальных линий
 public class SailsShapeHorizontal implements InterAdd
 {
     Sails sails;
 
     @Override
-    public void setSails(int num)
+    public void setSailsNumAndShape(int num)
     {
         switch (num)
         {
@@ -56,12 +55,8 @@ public class SailsShapeHorizontal implements InterAdd
                 g2D.drawLine(x + 91, y + 25, x + 99, y + 25);
 
                 g2D.drawLine(x + 90, y + 10, x + 90, y + 30);
-
                 break;
             case Three:
-                g2D.drawLine(x + 20, y + 10, x + 20, y + 30);
-                g2D.drawLine(x + 90, y + 10, x + 90, y + 30);
-
                 g2D.drawLine(x + 20, y + 10, x + 90, y + 10);
                 g2D.drawLine(x + 20, y + 15, x + 90, y + 15);
                 g2D.drawLine(x + 20, y + 20, x + 90, y + 20);

@@ -1,9 +1,11 @@
 public class Main
 {
+    static FormHarbor form;
+
     // Точка входа в программу
     public static void main(String[] args)
     {
         // Создание формы
-        FormHarbor form = new FormHarbor();
+        form = new FormHarbor();
     }
 }
