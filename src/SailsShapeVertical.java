@@ -1,6 +1,7 @@
 import java.awt.*;
 
-public class SailsShapeAdd1 implements InterAdd
+// Класс, делающий форму парусов в виде вертикальных линий
+public class SailsShapeVertical implements InterAdd
 {
     Sails sails;
 
@@ -24,7 +25,8 @@ public class SailsShapeAdd1 implements InterAdd
     @Override
     public void draw(Graphics2D g2D, Color color, int x, int y)
     {
-        g2D.setColor(Color.BLACK);
+        g2D.setColor(color);
+        g2D.setStroke(new BasicStroke(1));
         switch (sails)
         {
             case One:

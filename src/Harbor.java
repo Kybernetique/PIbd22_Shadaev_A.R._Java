@@ -1,9 +1,13 @@
 import java.awt.*;
+import java.util.*;
 
 public class Harbor<T extends ITransport, U extends InterAdd>
 {
     // Массив объектов, которые храним
-    private final T[] _places;
+    private final ArrayList<T> _places;
+
+    // Максимальный размер
+    private final int _maxCount;
 
     // Ширина окна отрисовки
     private final int pictureWidth;
@@ -17,17 +21,16 @@ public class Harbor<T extends ITransport, U extends InterAdd>
     // Размер места гавани (высота)
     private final int _placeSizeHeight = 80;
 
-    private int width;
-    private int height;
+    // Имя гавани
+    private String name;
 
     // Конструктор
     public Harbor(int picWidth, int picHeight)
     {
-        width = picWidth / _placeSizeWidth;
-        height = picHeight / _placeSizeHeight;
-        _places = (T[]) new ITransport[width * height];
         pictureWidth = picWidth;
         pictureHeight = picHeight;
+        _maxCount = (pictureWidth / _placeSizeWidth) * (picHeight / _placeSizeHeight);
+        _places = new ArrayList<T>();
     }
 
     // Перегрузка оператора сложения
@@ -36,16 +39,23 @@ public class Harbor<T extends ITransport, U extends InterAdd>
     {
         int i = 0;
         int j = 0;
-        while (i < height)
+
+        while (i < (pictureHeight / _placeSizeHeight))
         {
             j = 0;
-            while (j < width)
+            while (j < (pictureWidth / _placeSizeWidth))
             {
-                if (_places[i * width + j] == null)
+                if (i * (pictureWidth / _placeSizeWidth) + j == _places.size() && _places.size() <= _maxCount)
                 {
-                    _places[i * width + j] = boat;
-                    boat.setPosition(25 + j * _placeSizeWidth, 20 + i * _placeSizeHeight, pictureWidth, pictureHeight);
-                    return i * width + j;
+                    boat.setPosition(20 + j * _placeSizeWidth, 20 + i * _placeSizeHeight, pictureWidth, pictureHeight);
+                    _places.add(boat);
+                    return (i * (pictureWidth / _placeSizeWidth) + j);
+                } else if (i * (pictureWidth / _placeSizeWidth) + j < _places.size() &&
+                        _places.get(i * (pictureWidth / _placeSizeWidth) + j) == null)
+                {
+                    boat.setPosition(20 + j * _placeSizeWidth, 20 + i * _placeSizeHeight, pictureWidth, pictureHeight);
+                    _places.set(i * (pictureWidth / _placeSizeWidth) + j, boat);
+                    return (i * (pictureWidth / _placeSizeWidth) + j);
                 }
                 j++;
             }
@@ -58,57 +68,71 @@ public class Harbor<T extends ITransport, U extends InterAdd>
     // Логика действия: с места забираем судно
     public T del(int index)
     {
-        if ((index >= width * height) || (_places[index] == null))
+        if (index >= _places.size() || index < 0) return null;
+        if (_places.get(index) != null)
         {
-            return null;
-        }
-        if (_places[index] != null)
-        {
-            T obj = _places[index];
-            _places[index] = null;
-            return obj;
-        } else
-        {
-            return null;
-        }
+            T boat = _places.get(index);
+            _places.set(index, null);
+            return boat;
+        } else return null;
     }
 
+    // Перегрузка оператора "<="
     public boolean lessOrEqual(Sailboat boat)
     {
         int minNum = Integer.MAX_VALUE;
-        for (int i = 0; i < _places.length; i++)
+        for (int i = 0; i < _places.size(); i++)
         {
-            if (_places[i] != null)
+            if (_places.get(i) != null)
             {
-                if (_places[i].hashCode() <= minNum) minNum = _places[i].hashCode();
+                if (_places.get(i).hashCode() <= minNum) minNum = _places.get(i).hashCode();
             }
         }
-        return  boat.hashCode() <= minNum;
+        return boat.hashCode() <= minNum;
     }
 
+    // Перегрузка оператора ">="
     public boolean moreOrEqual(Sailboat boat)
     {
         int maxNum = Integer.MIN_VALUE;
-        for (int i = 0; i < _places.length; i++)
+        for (int i = 0; i < _places.size(); i++)
         {
-            if (_places[i] != null)
+            if (_places.get(i) != null)
             {
-                if (_places[i].hashCode() >= maxNum) maxNum = _places[i].hashCode();
+                if (_places.get(i).hashCode() >= maxNum) maxNum = _places.get(i).hashCode();
             }
         }
         return boat.hashCode() >= maxNum;
     }
 
+    // Геттер для имени гавани
+    public String getName()
+    {
+        return name;
+    }
 
+    // Сеттер для имени гавани
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    // Метод, позволяющий корректно отображать название гавани
+    public String toString()
+    {
+        return name;
+    }
+
+    // Метод отрисовки
     public void draw(Graphics g)
     {
         Graphics2D g2D = (Graphics2D) g;
         drawMarking(g2D);
-        for (int i = 0; i < _places.length; i++)
+        for (int i = 0; i < _places.size(); i++)
         {
-            if (_places[i] != null)
+            if (_places.get(i) != null)
             {
-                _places[i].drawTransport(g);
+                _places.get(i).drawTransport(g);
             }
         }
     }
@@ -129,5 +153,12 @@ public class Harbor<T extends ITransport, U extends InterAdd>
             g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth,
                     (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
         }
+    }
+
+    // Индексатор
+    public T indexer(int ind)
+    {
+        if (ind > -1 && ind < _places.size()) return _places.get(ind);
+        else return null;
     }
 }

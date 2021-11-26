@@ -1,6 +1,7 @@
 import java.awt.*;
 
-public class SailsShapeAdd2 implements InterAdd
+// Класс, делающий форму парусов в виде горизонтальных линий
+public class SailsShapeHorizontal implements InterAdd
 {
     Sails sails;
 
@@ -24,7 +25,8 @@ public class SailsShapeAdd2 implements InterAdd
     @Override
     public void draw(Graphics2D g2D, Color color, int x, int y)
     {
-        g2D.setColor(Color.BLACK);
+        g2D.setColor(color);
+        g2D.setStroke(new BasicStroke(1));
         switch (sails)
         {
             case One:
@@ -39,7 +41,6 @@ public class SailsShapeAdd2 implements InterAdd
                 g2D.drawLine(x + 90, y + 10, x + 90, y + 30);
                 break;
             case Two:
-                g2D.drawLine(x + 20, y + 10, x + 90, y + 10);
                 g2D.drawLine(x + 20, y + 10, x + 20, y + 30);
 
                 g2D.drawLine(x + 13, y + 13, x + 19, y + 13);
@@ -48,23 +49,19 @@ public class SailsShapeAdd2 implements InterAdd
                 g2D.drawLine(x + 11, y + 22, x + 19, y + 22);
                 g2D.drawLine(x + 11, y + 25, x + 19, y + 25);
 
-
                 g2D.drawLine(x + 91, y + 13, x + 97, y + 13);
                 g2D.drawLine(x + 91, y + 16, x + 99, y + 16);
                 g2D.drawLine(x + 91, y + 19, x + 99, y + 19);
                 g2D.drawLine(x + 91, y + 22, x + 99, y + 22);
                 g2D.drawLine(x + 91, y + 25, x + 99, y + 25);
 
-
                 g2D.drawLine(x + 90, y + 10, x + 90, y + 30);
 
                 break;
             case Three:
-                g2D.setColor(color);
                 g2D.drawLine(x + 20, y + 10, x + 20, y + 30);
                 g2D.drawLine(x + 90, y + 10, x + 90, y + 30);
 
-                g2D.setColor(Color.BLACK);
                 g2D.drawLine(x + 20, y + 10, x + 90, y + 10);
                 g2D.drawLine(x + 20, y + 15, x + 90, y + 15);
                 g2D.drawLine(x + 20, y + 20, x + 90, y + 20);

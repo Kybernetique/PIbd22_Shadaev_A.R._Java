@@ -3,9 +3,7 @@ import java.awt.*;
 public class Sailboat extends Boat
 {
     // Дополнительный класс для отрисовки парусов (усложн.)
-    SailsAdd sailsAdd;
     InterAdd interAdd;
-
 
     // Дополнительный цвет
     private Color SecondaryColor;
@@ -84,31 +82,33 @@ public class Sailboat extends Boat
 
     // Инициализация свойств
     public Sailboat(int maxSpeed, float weight, Color mainColor, Color secondaryColor, boolean front, boolean back,
-                    boolean anchor, boolean sails, int sailsNum, int sailsShape)
+                    boolean anchor, boolean sails, int ID, int sailsNumAndShape)
     {
         super(maxSpeed, weight, mainColor, 200, 40);
-
-        sailsAdd = new SailsAdd();
-        sailsAdd.setSails(sailsNum);
-        switch (sailsShape)
-        {
-            case 1: // Vertical
-                interAdd = new SailsShapeAdd1();
-                break;
-            case 2: // Horizontal
-                interAdd = new SailsShapeAdd2();
-                break;
-        }
-        interAdd.setSails(sailsNum);
-
         this.SecondaryColor = secondaryColor;
         this.Front = front;
         this.Back = back;
         this.Anchor = anchor;
         this.Sails = sails;
 
+        switch (ID)
+        {
+            case 1: // Number
+                interAdd = new SailsNum();
+                interAdd.setSails(sailsNumAndShape);
+                break;
+            case 2: // Vertical
+                interAdd = new SailsShapeVertical();
+                interAdd.setSails(sailsNumAndShape);
+                break;
+            case 3: // Horizontal
+                interAdd = new SailsShapeHorizontal();
+                interAdd.setSails(sailsNumAndShape);
+                break;
+        }
     }
 
+    // Метод отрисовки парусника
     @Override
     public void drawTransport(Graphics g)
     {
@@ -167,7 +167,6 @@ public class Sailboat extends Boat
         // Паруса
         if (Sails)
         {
-            sailsAdd.draw(g2D, SecondaryColor, _startPosX, _startPosY);
             interAdd.draw(g2D, SecondaryColor, _startPosX, _startPosY);
         }
     }

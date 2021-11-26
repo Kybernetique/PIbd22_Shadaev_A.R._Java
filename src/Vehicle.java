@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public abstract class Transport implements ITransport
+public abstract class Vehicle implements ITransport
 {
     // Левая координата отрисовки
     protected int _startPosX;

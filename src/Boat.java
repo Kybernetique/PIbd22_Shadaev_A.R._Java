@@ -1,7 +1,7 @@
 import java.awt.*;
 
 // Класс "Лодка"
-public class Boat extends Transport
+public class Boat extends Vehicle
 {
     // Ширина отрисовки лодки
     private int boatWidth = 200;

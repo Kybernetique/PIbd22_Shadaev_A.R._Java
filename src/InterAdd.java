@@ -1,5 +1,6 @@
 import java.awt.*;
 
+// Интерфейс ИнтерДоп (усл.)
 public interface InterAdd
 {
     void setSails(int num);

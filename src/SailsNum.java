@@ -1,7 +1,7 @@
 import java.awt.*;
 
-// Дополнительный класс для отрисовки парусов (усложн.)
-public class SailsAdd implements InterAdd
+// Дополнительный класс для отрисовки количества парусов (усложн.)
+public class SailsNum implements InterAdd
 {
     private Sails sails;
 
@@ -37,9 +37,8 @@ public class SailsAdd implements InterAdd
             case One:
                 g2D.drawOval(x + 10, y + 10, 20, 20);
                 g2D.drawOval(x + 80, y + 10, 20, 20);
-                g2D.drawRect(x + 20, y + 10, 70, 20);
 
-                g2D.setColor(new Color(0, 255, 255));
+                g2D.setColor(color);
                 g2D.fillRect(x + 20, y + 10, 70, 20);
                 break;
             case Two:
@@ -50,10 +49,6 @@ public class SailsAdd implements InterAdd
                 g2D.setColor(color);
                 g2D.fillOval(x + 80, y + 10, 20, 20);
                 g2D.fillOval(x + 10, y + 10, 20, 20);
-
-                g2D.setColor(new Color(0, 191, 255));
-                g2D.fillRect(x + 20, y + 10, 70, 20);
-
                 break;
             case Three:
                 g2D.drawOval(x + 10, y + 10, 20, 20);

@@ -12,7 +12,6 @@ public class MyImage extends JComponent
     public void paintComponent(Graphics g) {
         super.paintComponents(g);
         g2D = (Graphics2D) g;
-
         g2D.drawImage(image, 0, 0, this);
     }
 }

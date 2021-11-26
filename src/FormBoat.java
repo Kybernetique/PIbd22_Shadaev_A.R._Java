@@ -4,13 +4,14 @@ import javax.swing.*;
 import java.util.*;
 
 // Создание формы
-public class BoatGUI
+public class FormBoat
 {
     ITransport boat;
     MyImage myImage;
     BufferedImage bufferedImage;
     Graphics g;
 
+    // Метод отрисовки лодки
     private void draw()
     {
         g = bufferedImage.createGraphics();
@@ -21,12 +22,13 @@ public class BoatGUI
         myImage.repaint();
     }
 
-    public void SetBoat(ITransport boat) {
+    public void setBoat(ITransport boat) {
         this.boat = boat;
         draw();
     }
 
-    public BoatGUI()
+    // Конструктор
+    public FormBoat()
     {
         // Создание окна
         JFrame frame = new JFrame("Boat");
@@ -36,7 +38,6 @@ public class BoatGUI
 
         // Создание окна, где будет рисоваться изображение
         myImage = new MyImage();
-
         myImage.setSize(674, 450);
         myImage.setBackground(Color.WHITE);
         myImage.setLocation(0, 0);
@@ -54,8 +55,6 @@ public class BoatGUI
         // Обработка нажатия кнопки "Boat"
         buttonBoat.addActionListener(e ->
         {
-/*            g = image.getGraphics();
-            image.update(g);*/
             Random rnd = new Random();
             boat = new Boat(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000,
                     Color.CYAN);
@@ -74,8 +73,6 @@ public class BoatGUI
         // Обработка нажатия кнопки "Sailboat"
         buttonSailboat.addActionListener(e ->
         {
-/*            g = image.getGraphics();
-            image.update(g);*/
             Random rnd = new Random();
             boat = new Sailboat(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000,
                     new Color(0, 191, 255), new Color(0, 255, 255), true, true, true, true, rnd.nextInt(3) + 1, rnd.nextInt(2) + 1);
@@ -83,8 +80,6 @@ public class BoatGUI
                     myImage.getWidth(), myImage.getHeight());
             draw();
         });
-
-
 
         // Создание стрелки вверх
         JButton buttonMoveUp = new JButton();
