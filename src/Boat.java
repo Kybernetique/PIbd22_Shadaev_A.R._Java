@@ -1,31 +1,50 @@
 import java.awt.*;
 
-// Класс "Лодка"
 public class Boat extends Vehicle
 {
     // Ширина отрисовки лодки
-    private int boatWidth = 200;
+    private final int boatWidth = 200;
 
     // Высота отрисовки лодки
-    private int boatHeight = 40;
+    private final int boatHeight = 40;
 
-    // Конструктор
-    public Boat(int maxSpeed, float weight, Color mainColor)
+    // Максимальная скорость
+    public int MaxSpeed;
+
+    // Вес лодки
+    public float Weight;
+
+    // Основной цвет лодки
+    public Color MainColor;
+
+    // Разделитель
+    protected final char separator = ';';
+
+    public void setMainColor(Color mainColor)
     {
-        MaxSpeed = maxSpeed;
-        Weight = weight;
         MainColor = mainColor;
     }
 
-    // Конструктор с изменением размеров лодки
-    protected Boat(int maxSpeed, float weight, Color mainColor, int boatWidth,
-                   int boatHeight)
+    // Конструктор
+    public Boat(int maxSpeed, float weight, Color mainColor, int boatWidth, int boatHeight)
     {
         MaxSpeed = maxSpeed;
         Weight = weight;
         MainColor = mainColor;
-        this.boatWidth = boatWidth;
-        this.boatHeight = boatHeight;
+        this._pictureWidth = boatWidth;
+        this._pictureHeight = boatHeight;
+    }
+
+    // Конструктор
+    public Boat(String info)
+    {
+        String[] strs = info.split(String.valueOf(separator));
+        if (strs.length == 3)
+        {
+            MaxSpeed = Integer.parseInt(strs[0]);
+            Weight = Float.parseFloat(strs[1]);
+            MainColor = Color.decode(strs[2]);
+        }
     }
 
     // Изменение направления перемещения
@@ -69,6 +88,7 @@ public class Boat extends Vehicle
     }
 
     // Отрисовка лодки
+    @Override
     public void drawTransport(Graphics g)
     {
         Graphics2D g2D = (Graphics2D) g;
@@ -104,4 +124,16 @@ public class Boat extends Vehicle
         g2D.fillRect(_startPosX + 25, _startPosY +
                 10, 65, 20);
     }
+
+    public String toHexString(Color color)
+    {
+        return "#" + Integer.toHexString(color.getRGB()).substring(2);
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.valueOf(MaxSpeed) + separator + Weight + separator + toHexString(MainColor);
+    }
+
 }

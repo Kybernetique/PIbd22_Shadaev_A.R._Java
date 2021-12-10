@@ -1,188 +1,181 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
-// Создание формы
-public class FormBoat
+public class FormBoat extends JPanel
 {
-    ITransport boat;
-    MyImage myImage;
-    BufferedImage bufferedImage;
-    Graphics g;
+    private Vehicle boat;
+    private JButton buttonMoveUp, buttonMoveDown, buttonMoveRight, buttonMoveLeft, buttonBoat, buttonSailboat;
+    private JFrame frame;
+    private JPanel buttons;
+    private Container elementsPanel;
+    ActionListener actionListener;
+    Random rnd;
 
-    // Метод отрисовки лодки
-    private void draw()
-    {
-        g = bufferedImage.createGraphics();
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, myImage.getWidth(), myImage.getHeight());
-        boat.drawTransport(g);
-        myImage.image = bufferedImage;
-        myImage.repaint();
-    }
-
-    public void setBoat(ITransport boat)
-    {
-        this.boat = boat;
-        draw();
-    }
-
-    // Конструктор
     public FormBoat()
     {
-        // Создание окна
-        JFrame frame = new JFrame("Boat");
-        frame.setLayout(null);
-        frame.setSize(900, 500);
+        // Инициализация окна
+        frame = new JFrame("Boat");
+        frame.setSize(900, 625);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        // Создание окна, где будет рисоваться изображение
-        myImage = new MyImage();
-        myImage.setSize(674, 450);
-        myImage.setBackground(Color.WHITE);
-        myImage.setLocation(0, 0);
-        myImage.setVisible(true);
-
-        bufferedImage = new BufferedImage(myImage.getWidth(), myImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        elementsPanel = frame.getContentPane();
+        buttons = new JPanel();
 
         // Создание кнопки "Boat"
-        JButton buttonBoat = new JButton("Boat");
+        buttonBoat = new JButton("Boat");
         buttonBoat.setBackground(Color.WHITE);
         buttonBoat.setLocation(680, 19);
         buttonBoat.setSize(123, 24);
-        buttonBoat.setVisible(true);
-
-        // Обработка нажатия кнопки "Boat"
-        buttonBoat.addActionListener(e ->
-        {
-            Random rnd = new Random();
-            boat = new Boat(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000,
-                    Color.CYAN);
-            boat.setPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10,
-                    myImage.getWidth(), myImage.getHeight());
-            draw();
-        });
+        buttonBoat.setActionCommand("Boat");
+        buttons.add(buttonBoat);
 
         // Создание кнопки "Sailboat"
-        JButton buttonSailboat = new JButton("Sailboat");
+        buttonSailboat = new JButton("Sailboat");
         buttonSailboat.setBackground(Color.WHITE);
         buttonSailboat.setLocation(680, 55);
         buttonSailboat.setSize(123, 24);
-        buttonSailboat.setVisible(true);
-
-        // Обработка нажатия кнопки "Sailboat"
-        buttonSailboat.addActionListener(e ->
-        {
-            Random rnd = new Random();
-            boat = new Sailboat(rnd.nextInt(200) + 100, rnd.nextInt(1000) + 1000,
-                    new Color(0, 191, 255), new Color(0, 255, 255), true, true, true, true, rnd.nextInt(3) + 1, rnd.nextInt(2) + 1);
-            boat.setPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10,
-                    myImage.getWidth(), myImage.getHeight());
-            draw();
-        });
+        buttonSailboat.setActionCommand("Sailboat");
+        buttons.add(buttonSailboat);
 
         // Создание стрелки вверх
-        JButton buttonMoveUp = new JButton();
+        buttonMoveUp = new JButton();
         buttonMoveUp.setLocation(716, 390);
         buttonMoveUp.setSize(30, 30);
-        buttonMoveUp.setVisible(true);
-        buttonMoveUp.setIcon(new ImageIcon(new ImageIcon("src/img/Up.png")
-                .getImage().getScaledInstance(30, 30, 16)));
-
-        // Обработка нажатия стрелки вверх
-        buttonMoveUp.addActionListener(e ->
-        {
-            try
-            {
-                myImage.update(g);
-                boat.moveTransport(Direction.Up);
-                draw();
-            } catch (Exception ex)
-            {
-                JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
-            }
-        });
+        buttonMoveUp.setBackground(Color.WHITE);
+        buttonMoveUp.setIcon(new ImageIcon(new ImageIcon("src/img/Up.png").
+                getImage().getScaledInstance(30, 30, 16)));
+        buttonMoveUp.setActionCommand("Up");
+        buttons.add(buttonMoveUp);
 
         // Создание стрелки вниз
-        JButton buttonMoveDown = new JButton();
+        buttonMoveDown = new JButton();
         buttonMoveDown.setLocation(716, 420);
         buttonMoveDown.setSize(30, 30);
-        buttonMoveDown.setBackground(Color.WHITE);
-        buttonMoveDown.setVisible(true);
-        buttonMoveDown.setIcon(new ImageIcon(new ImageIcon("src/img/Down.png").
-                getImage().getScaledInstance(30, 30, 16)));
-
-        // Обработка нажатия стрелки вниз
-        buttonMoveDown.addActionListener(e ->
-        {
-            try
-            {
-                myImage.update(g);
-                boat.moveTransport(Direction.Down);
-                draw();
-            } catch (Exception ex)
-            {
-                JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
-            }
-        });
+        buttonMoveDown.setIcon(new ImageIcon(new ImageIcon("src/img/Down.png")
+                .getImage().getScaledInstance(30, 30, 16)));
+        buttonMoveDown.setActionCommand("Down");
+        buttons.add(buttonMoveDown);
 
         // Создание стрелки вправо
-        JButton buttonMoveRight = new JButton();
+        buttonMoveRight = new JButton();
         buttonMoveRight.setLocation(752, 420);
         buttonMoveRight.setSize(30, 30);
         buttonMoveRight.setBackground(Color.WHITE);
-        buttonMoveRight.setVisible(true);
         buttonMoveRight.setIcon(new ImageIcon(new ImageIcon("src/img/Right.png").
                 getImage().getScaledInstance(30, 30, 16)));
-
-        // Обработка нажатия стрелки вправо
-        buttonMoveRight.addActionListener(e ->
-        {
-            try
-            {
-                myImage.update(g);
-                boat.moveTransport(Direction.Right);
-                draw();
-            } catch (Exception ex)
-            {
-                JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
-            }
-        });
+        buttonMoveRight.setActionCommand("Right");
+        buttons.add(buttonMoveRight);
 
         // Создание стрелки влево
-        JButton buttonMoveLeft = new JButton();
+        buttonMoveLeft = new JButton();
         buttonMoveLeft.setLocation(680, 420);
         buttonMoveLeft.setSize(30, 30);
         buttonMoveLeft.setBackground(Color.WHITE);
-        buttonMoveLeft.setVisible(true);
         buttonMoveLeft.setIcon(new ImageIcon(new ImageIcon("src/img/Left.png").
                 getImage().getScaledInstance(30, 30, 16)));
+        buttonMoveLeft.setActionCommand("Left");
+        buttons.add(buttonMoveLeft);
 
-        // Обработка нажатия стрелки влево
-        buttonMoveLeft.addActionListener(e ->
-        {
-            try
-            {
-                myImage.update(g);
-                boat.moveTransport(Direction.Left);
-                draw();
-            } catch (Exception ex)
-            {
-                JOptionPane.showMessageDialog(null, "Try to click \"Create\" button at first!");
-            }
-        });
+        buttons.setLayout(null);
+        elementsPanel.add(buttons);
 
-        // Добавление кнопок и изображения на панель
-        frame.add(buttonBoat);
-        frame.add(buttonSailboat);
-        frame.add(buttonMoveUp);
-        frame.add(buttonMoveDown);
-        frame.add(buttonMoveRight);
-        frame.add(buttonMoveLeft);
-        frame.add(myImage);
-
+        actionListener = new ButtonActions();
+        buttonBoat.addActionListener(actionListener);
+        buttonSailboat.addActionListener(actionListener);
+        buttonMoveUp.addActionListener(actionListener);
+        buttonMoveDown.addActionListener(actionListener);
+        buttonMoveRight.addActionListener(actionListener);
+        buttonMoveLeft.addActionListener(actionListener);
         frame.setVisible(true);
     }
 
+    // Установка позиции лодки
+    public void setBoat(Vehicle boat)
+    {
+        this.boat = boat;
+        this.boat.setBounds(0, 0, 674, 450);
+        this.boat.setLayout(null);
+        this.boat.setPosition(25, 25, 674, 450);
+        elementsPanel.add(this.boat);
+        draw();
+    }
+
+    // Обработка нажатий клавиш
+    public class ButtonActions extends JPanel implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            switch (e.getActionCommand())
+            {
+                case "Up":
+                    if (boat != null)
+                    {
+                        boat.moveTransport(Direction.Up);
+                        draw();
+                    } else
+                    {
+                        JOptionPane.showMessageDialog(null, "Create a Boat or a Sailboat at first!");
+                    }
+                    break;
+                case "Down":
+                    if (boat != null)
+                    {
+                        boat.moveTransport(Direction.Down);
+                        draw();
+                    } else
+                    {
+                        JOptionPane.showMessageDialog(null, "Create a Boat or a Sailboat at first!");
+                    }
+                    break;
+                case "Right":
+                    if (boat != null)
+                    {
+                        boat.moveTransport(Direction.Right);
+                        draw();
+                    } else
+                    {
+                        JOptionPane.showMessageDialog(null, "Create a Boat or a Sailboat at first!");
+                    }
+                    break;
+                case "Left":
+                    if (boat != null)
+                    {
+                        boat.moveTransport(Direction.Left);
+                        draw();
+                    } else
+                    {
+                        JOptionPane.showMessageDialog(null, "Create a Boat or a Sailboat at first!");
+                    }
+                    break;
+                case "Boat":
+                    rnd = new Random();
+                    boat = new Boat(rnd.nextInt(200) + 100, rnd.nextFloat() * 200.0f + 100.0f, Color.CYAN, 200, 40);
+                    boat.setBounds(0, 0, 674, 450);
+                    boat.setPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10,
+                            frame.getWidth() - boat._startPosX - 200, frame.getHeight() - 130);
+                    elementsPanel.add(boat);
+                    draw();
+                    break;
+                case "Sailboat":
+                    rnd = new Random();
+                    boat = new Sailboat(rnd.nextInt(200) + 100, rnd.nextFloat() * 200.0f + 100.0f,
+                            new Color(0, 191, 255), new Color(0, 255, 255), true, true, true, true, rnd.nextInt(3) + 1, rnd.nextInt(2) + 1);
+                    boat.setBounds(0, 0, 674, 450);
+                    boat.setPosition(rnd.nextInt(90) + 10, rnd.nextInt(90) + 10,
+                            frame.getWidth() - boat._startPosX - 200, frame.getHeight() - 130);
+                    elementsPanel.add(boat);
+                    draw();
+                    break;
+            }
+        }
+    }
+
+    // Метод отрисовки
+    public void draw()
+    {
+        boat.getGraphics().clearRect(0, 0, 674, 450);
+        boat.drawTransport(boat.getGraphics());
+    }
 }

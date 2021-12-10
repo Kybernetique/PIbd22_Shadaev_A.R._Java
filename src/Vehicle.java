@@ -1,11 +1,12 @@
+import javax.swing.*;
 import java.awt.*;
 
-public abstract class Vehicle implements ITransport
+public abstract class Vehicle extends JPanel implements ITransport
 {
-    // Левая координата отрисовки
+    // Левая координата отрисовки лодки
     protected int _startPosX;
 
-    // Правая координата отрисовки
+    // Правая координата отрисовки лодки
     protected int _startPosY;
 
     // Ширина окна отрисовки
@@ -14,46 +15,6 @@ public abstract class Vehicle implements ITransport
     // Высота окна отрисовки
     protected int _pictureHeight;
 
-    // Максимальная скорость
-    public int MaxSpeed;
-
-    protected void setMaxSpeed(int MaxSpeed)
-    {
-        this.MaxSpeed = MaxSpeed;
-    }
-
-    protected int getMaxSpeed()
-    {
-        return this.MaxSpeed;
-    }
-
-    // Вес
-    public float Weight;
-
-    protected void setWeight(float Weight)
-    {
-        this.Weight = Weight;
-    }
-
-    protected float getWeight()
-    {
-        return this.Weight;
-    }
-
-    // Основной цвет
-    public Color MainColor;
-
-    protected void setMainColor(Color MainColor)
-    {
-        this.MainColor = MainColor;
-    }
-
-    protected Color getMainColor()
-    {
-        return this.MainColor;
-    }
-
-    // Установка позиции
     public void setPosition(int x, int y, int width, int height)
     {
         _startPosX = x;
@@ -62,10 +23,8 @@ public abstract class Vehicle implements ITransport
         _pictureHeight = height;
     }
 
-    // Отрисовка
-    public abstract void drawTransport(Graphics g);
-
-    // Изменение направления перемещения
     public abstract void moveTransport(Direction direction);
 
+    public abstract void drawTransport(Graphics g);
 }
+

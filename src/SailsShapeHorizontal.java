@@ -71,7 +71,6 @@ public class SailsShapeHorizontal implements InterAdd
                 g2D.drawLine(x + 90, y + 20, x + 100, y + 20);
                 g2D.drawLine(x + 91, y + 15, x + 99, y + 15);
                 break;
-
         }
     }
 }

@@ -6,14 +6,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 
-public class FormBoatConfig extends JPanel
+
+public class FormBoatConfig extends JFrame
 {
     private JFrame formConfig;
     private FormHarbor parentFrame;
     private JLabel pictureMask, boat, sailboat, mainColor, secondaryColor, speedLabel, weightLabel, labelSailsNum, labelSailsShapeVertical, labelSailsShapeHorizontal;
-    private MouseReaction mouseColor;
+    private MouseReaction mouseType, mouseColor;
     private ITransport pictureBoat;
-    private JPanel confPanel, orangeColorPanel, redColorPanel, pinkColorPanel, blueColorPanel, purpleColorPanel, cyanColorPanel, greenColorPanel, yellowColorPanel;
+    private JPanel confPanel, orangeColorPanel, redColorPanel, pinkColorPanel, blueColorPanel, purpleColorPanel, cyanColorPanel, greenColorPanel, yellowColorPanel, underGround;
     private FormBoatConfig.drawPanel drawPanel;
     private JSpinner spinnerChooseSpeed, spinnerChooseWeight, spinnerSailsNum;
     private JCheckBox checkBoxFront, checkBoxBack, checkBoxAnchor, checkBoxSail;
@@ -28,11 +29,11 @@ public class FormBoatConfig extends JPanel
 
     public void Init()
     {
+        mouseType = new MouseReaction();
         MouseReaction mouseType = new MouseReaction();
         mouseColor = new MouseReaction();
         formConfig.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        formConfig.setSize(900, 500);
-        formConfig.setLayout(null);
+        formConfig.setSize(900, 550);
 
         confPanel = new JPanel();
         confPanel.setLayout(null);
@@ -52,10 +53,9 @@ public class FormBoatConfig extends JPanel
         drawPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
         confPanel.add(drawPanel);
 
-        // Создание лейбла "Boat" с механизмом Drag & Drop
         boat = new JLabel("Boat");
         boat.setBounds(10, 10, 100, 50);
-        boat.setBorder(new BevelBorder(0));
+        boat.setBorder(new BevelBorder(BevelBorder.RAISED));
         boat.setTransferHandler(new TransferHandler("text"));
         boat.setHorizontalAlignment(SwingConstants.CENTER);
         boat.setVerticalAlignment(SwingConstants.CENTER);
@@ -66,7 +66,7 @@ public class FormBoatConfig extends JPanel
         // Создание лейбла "Sailboat" с механизмом Drag & Drop
         sailboat = new JLabel("Sailboat");
         sailboat.setBounds(10, 70, 100, 50);
-        sailboat.setBorder(new BevelBorder(0));
+        sailboat.setBorder(new BevelBorder(BevelBorder.RAISED));
         sailboat.setTransferHandler(new TransferHandler("text"));
         sailboat.setHorizontalAlignment(SwingConstants.CENTER);
         sailboat.setVerticalAlignment(SwingConstants.CENTER);
@@ -242,7 +242,7 @@ public class FormBoatConfig extends JPanel
         // Создание лейбла "Number of Sails" с механизмом Drag & Drop
         labelSailsNum = new JLabel("Number of Sails");
         labelSailsNum.setBounds(400, 220, 100, 50);
-        labelSailsNum.setBorder(new BevelBorder(0));
+        labelSailsNum.setBorder(new BevelBorder(BevelBorder.RAISED));
         labelSailsNum.setTransferHandler(new TransferHandler("text"));
         labelSailsNum.addMouseListener(mouseType);
         labelSailsNum.setDropTarget(null);
@@ -251,7 +251,7 @@ public class FormBoatConfig extends JPanel
         // Создание лейбла "Vertical Shape" с механизмом Drag & Drop
         labelSailsShapeVertical = new JLabel("Vertical Shape");
         labelSailsShapeVertical.setBounds(400, 280, 100, 50);
-        labelSailsShapeVertical.setBorder(new BevelBorder(0));
+        labelSailsShapeVertical.setBorder(new BevelBorder(BevelBorder.RAISED));
         labelSailsShapeVertical.setTransferHandler(new TransferHandler("text"));
         labelSailsShapeVertical.addMouseListener(mouseType);
         labelSailsShapeVertical.setDropTarget(null);
@@ -260,7 +260,7 @@ public class FormBoatConfig extends JPanel
         // Создание лейбла "Horizontal Shape" с механизмом Drag & Drop
         labelSailsShapeHorizontal = new JLabel("Horizontal Shape");
         labelSailsShapeHorizontal.setBounds(400, 340, 100, 50);
-        labelSailsShapeHorizontal.setBorder(new BevelBorder(0));
+        labelSailsShapeHorizontal.setBorder(new BevelBorder(BevelBorder.RAISED));
         labelSailsShapeHorizontal.setTransferHandler(new TransferHandler("text"));
         labelSailsShapeHorizontal.addMouseListener(mouseType);
         labelSailsShapeHorizontal.setDropTarget(null);
@@ -298,19 +298,22 @@ public class FormBoatConfig extends JPanel
             }
             if (pictureBoat != null && pictureBoat.getClass().equals(Sailboat.class))
             {
-                if (pictureMask.getText().equals("Number of Sails"))
+                switch (pictureMask.getText())
                 {
-                    setSailsNumAndShape(1);
-                } else if (pictureMask.getText().equals("Vertical Shape"))
-                {
-                    setSailsNumAndShape(2);
-                } else if (pictureMask.getText().equals("Horizontal Shape"))
-                {
-                    setSailsNumAndShape(3);
+                    case "Number of Sails":
+                        setSailsNumAndShape(1);
+                        break;
+                    case "Vertical Shape":
+                        setSailsNumAndShape(2);
+                        break;
+                    case "Horizontal Shape":
+                        setSailsNumAndShape(3);
+                        break;
                 }
             }
             pictureMask.setText("");
         };
+
 
         // Обработка нажатия кнопки "Append"
         buttonAppend.addActionListener(ActionEvent ->
@@ -333,7 +336,6 @@ public class FormBoatConfig extends JPanel
         pictureMask.addPropertyChangeListener(typeChangeListener);
         pictureMask.addPropertyChangeListener(colorChangeListener);
         formConfig.add(confPanel);
-
         formConfig.setVisible(true);
     }
 
@@ -361,7 +363,7 @@ public class FormBoatConfig extends JPanel
     public void setBoat()
     {
         pictureBoat = new Boat((int) spinnerChooseSpeed.getValue(), (int) spinnerChooseWeight.getValue(), Color.GRAY, 180, 60);
-        pictureBoat.setPosition(20, 50, formConfig.getWidth(), formConfig.getHeight());
+        pictureBoat.setPosition(20, 25, formConfig.getWidth(), formConfig.getHeight());
         drawPanel.setBoat(pictureBoat);
         drawPanel.repaint();
     }
@@ -370,7 +372,7 @@ public class FormBoatConfig extends JPanel
     public void setSailboat()
     {
         pictureBoat = new Sailboat((int) spinnerChooseSpeed.getValue(), (int) spinnerChooseWeight.getValue(), Color.GRAY, Color.CYAN, checkBoxFront.isSelected(), checkBoxBack.isSelected(), checkBoxAnchor.isSelected(), checkBoxSail.isSelected(), 1, 1);
-        pictureBoat.setPosition(20, 50, confPanel.getWidth(), confPanel.getHeight());
+        pictureBoat.setPosition(20, 25, confPanel.getWidth(), confPanel.getHeight());
         drawPanel.setBoat(pictureBoat);
         drawPanel.repaint();
     }
@@ -423,4 +425,3 @@ public class FormBoatConfig extends JPanel
         }
     }
 }
-

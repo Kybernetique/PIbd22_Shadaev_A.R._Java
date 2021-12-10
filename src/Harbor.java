@@ -1,7 +1,8 @@
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Harbor<T extends ITransport, U extends InterAdd>
+public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
 {
     // Массив объектов, которые храним
     private final ArrayList<T> _places;
@@ -30,62 +31,43 @@ public class Harbor<T extends ITransport, U extends InterAdd>
         pictureWidth = picWidth;
         pictureHeight = picHeight;
         _maxCount = (pictureWidth / _placeSizeWidth) * (picHeight / _placeSizeHeight);
-        _places = new ArrayList<T>();
+        _places = new ArrayList<>();
     }
 
-    // Перегрузка оператора сложения
-    // Логика действия: на место добавляется лодка
-    public int add(T boat)
+    public int add(Harbor<T, U> p, T boat)
     {
-        int i = 0;
-        int j = 0;
+        if (p._maxCount <= p._places.size()) return -1;
 
-        while (i < (pictureHeight / _placeSizeHeight))
+        for (int i = 0; i < p._places.size() + 1; i++)
         {
-            j = 0;
-            while (j < (pictureWidth / _placeSizeWidth))
-            {
-                if (i * (pictureWidth / _placeSizeWidth) + j == _places.size() && _places.size() <= _maxCount)
-                {
-                    boat.setPosition(20 + j * _placeSizeWidth, 20 + i * _placeSizeHeight, pictureWidth, pictureHeight);
-                    _places.add(boat);
-                    return (i * (pictureWidth / _placeSizeWidth) + j);
-                } else if (i * (pictureWidth / _placeSizeWidth) + j < _places.size() &&
-                        _places.get(i * (pictureWidth / _placeSizeWidth) + j) == null)
-                {
-                    boat.setPosition(20 + j * _placeSizeWidth, 20 + i * _placeSizeHeight, pictureWidth, pictureHeight);
-                    _places.set(i * (pictureWidth / _placeSizeWidth) + j, boat);
-                    return (i * (pictureWidth / _placeSizeWidth) + j);
-                }
-                j++;
-            }
-            i++;
+            p._places.add(boat);
+            return p._places.indexOf(boat);
         }
         return -1;
     }
 
-    // Перегрузка оператора вычитания
-    // Логика действия: с места забираем судно
-    public T del(int index)
+    public T del(Harbor<T, U> p, int index)
     {
-        if (index >= _places.size() || index < 0) return null;
-        if (_places.get(index) != null)
+        T removedBoat;
+
+        if (index > -1 && index < p._places.size() && p._places.get(index) != null)
         {
-            T boat = _places.get(index);
-            _places.set(index, null);
-            return boat;
-        } else return null;
+            removedBoat = p._places.get(index);
+            p._places.remove(index);
+            return removedBoat;
+        }
+        return null;
     }
 
     // Перегрузка оператора "<="
     public boolean lessOrEqual(Sailboat boat)
     {
         int minNum = Integer.MAX_VALUE;
-        for (int i = 0; i < _places.size(); i++)
+        for (T place : _places)
         {
-            if (_places.get(i) != null)
+            if (place != null)
             {
-                if (_places.get(i).hashCode() <= minNum) minNum = _places.get(i).hashCode();
+                if (place.hashCode() <= minNum) minNum = place.hashCode();
             }
         }
         return boat.hashCode() <= minNum;
@@ -95,70 +77,72 @@ public class Harbor<T extends ITransport, U extends InterAdd>
     public boolean moreOrEqual(Sailboat boat)
     {
         int maxNum = Integer.MIN_VALUE;
-        for (int i = 0; i < _places.size(); i++)
+        for (T place : _places)
         {
-            if (_places.get(i) != null)
+            if (place != null)
             {
-                if (_places.get(i).hashCode() >= maxNum) maxNum = _places.get(i).hashCode();
+                if (place.hashCode() >= maxNum) maxNum = place.hashCode();
             }
         }
         return boat.hashCode() >= maxNum;
     }
 
-    // Геттер для имени гавани
+    @Override
     public String getName()
     {
         return name;
     }
 
-    // Сеттер для имени гавани
+    @Override
     public void setName(String name)
     {
         this.name = name;
     }
 
-    // Метод, позволяющий корректно отображать название гавани
+    @Override
     public String toString()
     {
         return name;
     }
 
-    // Метод отрисовки
+    public ArrayList<T> get_places()
+    {
+        return _places;
+    }
+
+    // Метод отрисовки разметки парковочных мест
     public void draw(Graphics g)
     {
-        Graphics2D g2D = (Graphics2D) g;
-        drawMarking(g2D);
+        g.clearRect(0, 75, 674, 525);
         for (int i = 0; i < _places.size(); i++)
         {
             if (_places.get(i) != null)
             {
+                _places.get(i).setPosition(20 + i % 3 * _placeSizeWidth, i / 3 * _placeSizeHeight + 20, pictureWidth, pictureHeight);
                 _places.get(i).drawTransport(g);
             }
         }
+        drawMarking(g);
     }
 
-    // Метод отрисовки границ мест гавани
-    private void drawMarking(Graphics g)
+    public void drawMarking(Graphics gr)
     {
-        Graphics2D g2D = (Graphics2D) g;
-        g2D.setColor(Color.BLACK);
-        g2D.setStroke(new BasicStroke(3));
+        Graphics2D g = (Graphics2D) gr;
+        g.setStroke(new BasicStroke(3));
+        g.setColor(Color.BLACK);
         for (int i = 0; i < pictureWidth / _placeSizeWidth; i++)
         {
             for (int j = 0; j < pictureHeight / _placeSizeHeight + 1; ++j)
-            {
-                g.drawLine(i * _placeSizeWidth, j * _placeSizeHeight, i *
-                        _placeSizeWidth + _placeSizeWidth / 2, j * _placeSizeHeight);
+            { // Линия разметки места
+                g.drawLine(i * _placeSizeWidth, j * _placeSizeHeight, i * _placeSizeWidth + _placeSizeWidth / 2, j * _placeSizeHeight);
             }
-            g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth,
-                    (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
+            g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth, (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
         }
     }
 
-    // Индексатор
-    public T indexer(int ind)
+    public T indexer(int index)
     {
-        if (ind > -1 && ind < _places.size()) return _places.get(ind);
-        else return null;
+        return _places.get(index);
     }
 }
+

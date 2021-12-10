@@ -80,7 +80,9 @@ public class Sailboat extends Boat
         return this.Sails;
     }
 
-    // Инициализация свойств
+    private int sailsNumAndShape = 3;
+
+    // Конструктор
     public Sailboat(int maxSpeed, float weight, Color mainColor, Color secondaryColor, boolean front, boolean back,
                     boolean anchor, boolean sails, int ID, int sailsNumAndShape)
     {
@@ -105,6 +107,26 @@ public class Sailboat extends Boat
                 interAdd = new SailsShapeHorizontal();
                 interAdd.setSailsNumAndShape(sailsNumAndShape);
                 break;
+        }
+    }
+
+    // Конструктор
+    public Sailboat(String info)
+    {
+        super(info);
+        String[] strs = info.split(String.valueOf(separator));
+        if (strs.length == 9)
+        {
+            MaxSpeed = Integer.parseInt(strs[0]);
+            Weight = Float.parseFloat(strs[1]);
+            MainColor = Color.decode(strs[2]);
+            SecondaryColor = Color.decode(strs[3]);
+            Front = Boolean.parseBoolean(strs[4]);
+            Back = Boolean.parseBoolean(strs[5]);
+            Anchor = Boolean.parseBoolean(strs[6]);
+            Sails = Boolean.parseBoolean(strs[7]);
+            interAdd = new SailsNum();
+            interAdd.setSailsNumAndShape(sailsNumAndShape);
         }
     }
 
@@ -169,5 +191,13 @@ public class Sailboat extends Boat
         {
             interAdd.draw(g2D, SecondaryColor, _startPosX, _startPosY);
         }
+    }
+
+    // Перегрузка метода toString()
+    @Override
+    public String toString()
+    {
+        String res = super.toString();
+        return res + separator + super.toHexString(SecondaryColor) + separator + Front + separator + Back + separator + Anchor + separator + Sails + separator + sailsNumAndShape;
     }
 }
