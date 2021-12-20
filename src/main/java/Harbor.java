@@ -34,9 +34,12 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
         _places = new ArrayList<>();
     }
 
-    public int add(Harbor<T, U> p, T boat)
+    public int add(Harbor<T, U> p, T boat) throws HarborOverflowException
     {
-        if (p._maxCount <= p._places.size()) return -1;
+        if (p._maxCount <= p._places.size())
+        {
+            throw new HarborOverflowException();
+        }
 
         for (int i = 0; i < p._places.size() + 1; i++)
         {
@@ -46,7 +49,7 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
         return -1;
     }
 
-    public T del(Harbor<T, U> p, int index)
+    public T del(Harbor<T, U> p, int index) throws HarborNotFoundException
     {
         T removedBoat;
 
@@ -56,7 +59,10 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
             p._places.remove(index);
             return removedBoat;
         }
-        return null;
+        else
+        {
+            throw new HarborNotFoundException(index);
+        }
     }
 
     // Перегрузка оператора "<="
@@ -67,7 +73,10 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
         {
             if (place != null)
             {
-                if (place.hashCode() <= minNum) minNum = place.hashCode();
+                if (place.hashCode() <= minNum)
+                {
+                    minNum = place.hashCode();
+                }
             }
         }
         return boat.hashCode() <= minNum;
@@ -81,7 +90,10 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
         {
             if (place != null)
             {
-                if (place.hashCode() >= maxNum) maxNum = place.hashCode();
+                if (place.hashCode() >= maxNum)
+                {
+                    maxNum = place.hashCode();
+                }
             }
         }
         return boat.hashCode() >= maxNum;
@@ -118,7 +130,8 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
         {
             if (_places.get(i) != null)
             {
-                _places.get(i).setPosition(20 + i % 3 * _placeSizeWidth, i / 3 * _placeSizeHeight + 20, pictureWidth, pictureHeight);
+                _places.get(i).setPosition(20 + i % 3 * _placeSizeWidth, i / 3 * _placeSizeHeight + 20, pictureWidth,
+                                           pictureHeight);
                 _places.get(i).drawTransport(g);
             }
         }
@@ -134,9 +147,11 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
         {
             for (int j = 0; j < pictureHeight / _placeSizeHeight + 1; ++j)
             { // Линия разметки места
-                g.drawLine(i * _placeSizeWidth, j * _placeSizeHeight, i * _placeSizeWidth + _placeSizeWidth / 2, j * _placeSizeHeight);
+                g.drawLine(i * _placeSizeWidth, j * _placeSizeHeight, i * _placeSizeWidth + _placeSizeWidth / 2,
+                           j * _placeSizeHeight);
             }
-            g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth, (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
+            g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth,
+                       (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
         }
     }
 

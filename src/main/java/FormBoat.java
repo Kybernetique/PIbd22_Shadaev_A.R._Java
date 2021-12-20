@@ -44,7 +44,7 @@ public class FormBoat extends JPanel
         buttonMoveUp.setLocation(716, 390);
         buttonMoveUp.setSize(30, 30);
         buttonMoveUp.setBackground(Color.WHITE);
-        buttonMoveUp.setIcon(new ImageIcon(new ImageIcon("src/img/Up.png").
+        buttonMoveUp.setIcon(new ImageIcon(new ImageIcon("src/main/java/img/Up.png").
                 getImage().getScaledInstance(30, 30, 16)));
         buttonMoveUp.setActionCommand("Up");
         buttons.add(buttonMoveUp);
@@ -53,7 +53,7 @@ public class FormBoat extends JPanel
         buttonMoveDown = new JButton();
         buttonMoveDown.setLocation(716, 420);
         buttonMoveDown.setSize(30, 30);
-        buttonMoveDown.setIcon(new ImageIcon(new ImageIcon("src/img/Down.png")
+        buttonMoveDown.setIcon(new ImageIcon(new ImageIcon("src/main/java/img/Down.png")
                 .getImage().getScaledInstance(30, 30, 16)));
         buttonMoveDown.setActionCommand("Down");
         buttons.add(buttonMoveDown);
@@ -63,7 +63,7 @@ public class FormBoat extends JPanel
         buttonMoveRight.setLocation(752, 420);
         buttonMoveRight.setSize(30, 30);
         buttonMoveRight.setBackground(Color.WHITE);
-        buttonMoveRight.setIcon(new ImageIcon(new ImageIcon("src/img/Right.png").
+        buttonMoveRight.setIcon(new ImageIcon(new ImageIcon("src/main/java/img/Right.png").
                 getImage().getScaledInstance(30, 30, 16)));
         buttonMoveRight.setActionCommand("Right");
         buttons.add(buttonMoveRight);
@@ -73,7 +73,7 @@ public class FormBoat extends JPanel
         buttonMoveLeft.setLocation(680, 420);
         buttonMoveLeft.setSize(30, 30);
         buttonMoveLeft.setBackground(Color.WHITE);
-        buttonMoveLeft.setIcon(new ImageIcon(new ImageIcon("src/img/Left.png").
+        buttonMoveLeft.setIcon(new ImageIcon(new ImageIcon("src/main/java/img/Left.png").
                 getImage().getScaledInstance(30, 30, 16)));
         buttonMoveLeft.setActionCommand("Left");
         buttons.add(buttonMoveLeft);

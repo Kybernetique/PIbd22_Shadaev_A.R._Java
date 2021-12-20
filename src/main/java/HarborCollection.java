@@ -104,10 +104,14 @@ public class HarborCollection
     }
 
     // Метод для загрузки всех гаваней
-    public boolean loadData(String filename) throws FileNotFoundException
+    public boolean loadData(String filename) throws FileNotFoundException, HarborOverflowException
     {
         Vehicle boat;
         File file = new File(filename);
+        if (!file.exists())
+        {
+            throw new FileNotFoundException();
+        }
         Scanner scanner = new Scanner(file);
         String line = scanner.nextLine(), key = "";
         if (!line.contains("HarborCollection"))
@@ -121,7 +125,8 @@ public class HarborCollection
             {
                 key = line.split(String.valueOf(separator))[1];
                 addHarbor(key);
-            } else if (line.split(String.valueOf(separator))[0].equals("Boat"))
+            }
+            else if (line.split(String.valueOf(separator))[0].equals("Boat"))
             {
                 boat = new Boat(line.split(String.valueOf(separator))[1]);
                 int result = harborStages.get(key).add(harborStages.get(key), boat);
@@ -130,7 +135,8 @@ public class HarborCollection
                     return false;
                 }
                 harborStages.get(key).add(boat);
-            } else if (line.split(String.valueOf(separator))[0].equals("Sailboat"))
+            }
+            else if (line.split(String.valueOf(separator))[0].equals("Sailboat"))
             {
                 boat = new Sailboat(line.split(String.valueOf(separator))[1]);
                 int result = harborStages.get(key).add(harborStages.get(key), boat);
@@ -167,7 +173,8 @@ public class HarborCollection
                     {
                         writer.println("Sailboat" + separator + boat);
                     }
-                } else
+                }
+                else
                 {
                     return false;
                 }
@@ -178,10 +185,14 @@ public class HarborCollection
     }
 
     // Метод для загрузки отдельной гавани
-    public boolean loadDataFromHarbor(String filename) throws FileNotFoundException
+    public boolean loadDataFromHarbor(String filename) throws FileNotFoundException, HarborOverflowException
     {
         Vehicle boat;
         File file = new File(filename);
+        if (!file.exists())
+        {
+            throw new FileNotFoundException();
+        }
         Scanner scanner = new Scanner(file);
         String line, key = "";
         while (scanner.hasNextLine())
@@ -193,11 +204,13 @@ public class HarborCollection
                 if (harborStages.containsKey(key))
                 {
                     harborStages.get(key).get_places().clear();
-                } else
+                }
+                else
                 {
                     addHarbor(key);
                 }
-            } else if (line.split(String.valueOf(separator))[0].equals("Boat"))
+            }
+            else if (line.split(String.valueOf(separator))[0].equals("Boat"))
             {
                 boat = new Boat(line.split(String.valueOf(separator))[1]);
                 int result = harborStages.get(key).add(harborStages.get(key), boat);
@@ -206,7 +219,8 @@ public class HarborCollection
                     return false;
                 }
                 harborStages.get(key).add(boat);
-            } else if (line.split(String.valueOf(separator))[0].equals("Sailboat"))
+            }
+            else if (line.split(String.valueOf(separator))[0].equals("Sailboat"))
             {
                 boat = new Sailboat(line.split(String.valueOf(separator))[1]);
                 int result = harborStages.get(key).add(harborStages.get(key), boat);

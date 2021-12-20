@@ -318,7 +318,14 @@ public class FormBoatConfig extends JFrame
         // Обработка нажатия кнопки "Append"
         buttonAppend.addActionListener(ActionEvent ->
         {
-            parentFrame.addBoat((Vehicle) pictureBoat);
+            try
+            {
+                parentFrame.addBoat((Vehicle) pictureBoat);
+            }
+            catch (HarborOverflowException e)
+            {
+                e.printStackTrace();
+            }
             formConfig.setVisible(false);
             formConfig.dispose();
         });

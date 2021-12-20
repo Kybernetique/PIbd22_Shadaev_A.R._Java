@@ -1,5 +1,4 @@
 import sun.misc.Queue;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -9,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Random;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 public class FormHarbor extends JPanel
 {
@@ -25,7 +26,7 @@ public class FormHarbor extends JPanel
     private JMenuBar menuBar;
     private JMenu fileAllHarbors, fileThisHarbor;
     private JMenuItem save, load, saveHarbor, loadHarbor;
-    Random rnd = new Random();
+    private static final Logger logger = Logger.getLogger(FormHarbor.class);
 
     public FormHarbor()
     {
@@ -98,6 +99,7 @@ public class FormHarbor extends JPanel
                 harbor.setBackground(new Color(0, 0, 0, 0));
                 panelElements.add(harbor);
                 harbor.setLayout(null);
+                logger.log(Level.INFO, "Moving on to harbor: " + harbor.getName());
                 draw();
             }
         });
@@ -185,16 +187,26 @@ public class FormHarbor extends JPanel
                     }
                     break;
                 case "TakeBoat":
-                    ITransport boat = harbor.del(harbor, Integer.parseInt(textFieldPlace.getText()));
-                    if (boat != null)
+                    ITransport boat = null;
+                    try
                     {
+                        boat = harbor.del(harbor, Integer.parseInt(textFieldPlace.getText()));
                         removedStages.enqueue(boat);
-                    } else
-                    {
-                        JOptionPane.showMessageDialog(null, "This harbor place is empty.");
+                        logger.info("Removing boat: "  + boat.toString());
+                        draw();
                     }
-                    draw();
-                    break;
+                    catch (HarborNotFoundException harborNotFoundException)
+                    {
+                        logger.log(Level.WARN, "Harbor is not found: "+Integer.parseInt(textFieldPlace.getText()));
+                        /*logger.log(Level.FATAL, "TEST");*/
+                        JOptionPane.showMessageDialog(null, "Harbor is not found", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    }
+                    catch (NumberFormatException numberFormatException) {
+                        logger.log(Level.ERROR, "Wrong number format");
+                        JOptionPane.showMessageDialog(null, "Wrong number format", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    } catch (Exception exception){
+                        logger.log(Level.FATAL, "Fatal unexpected error");
+                    } break;
                 case "AddHarbor":
                     if (textFieldHarborName.getText().isEmpty())
                     {
@@ -204,6 +216,7 @@ public class FormHarbor extends JPanel
                         harbor = harborCollection.addHarbor(textFieldHarborName.getText());
                         if (harbor != null)
                         {
+                            logger.log(Level.INFO, "Harbor was created: "+harbor.getName());
                             harbor.setBounds(0, 75, 674, 525);
                             harbor.setBackground(new Color(0, 0, 0, 0));
                             panelElements.add(harbor);
@@ -224,6 +237,7 @@ public class FormHarbor extends JPanel
                 case "DelHarbor":
                     if (harborCollection.modelList.indexOf(harbor) > -1)
                     {
+                        logger.log(Level.INFO, "Harbor was removed: "+harbor.getName());
                         harborCollection.delHarbor(harborCollection.modelList.get(harborCollection.modelList.indexOf(harbor)).getName());
                         frame.getGraphics().clearRect(0, 75, 674, 525);
                     } else
@@ -238,9 +252,11 @@ public class FormHarbor extends JPanel
                         try
                         {
                             boat = removedStages.dequeue();
+                            logger.log(Level.INFO, "Boat was dequeued: "+boat.toString());
                         } catch (InterruptedException interruptedException)
                         {
                             interruptedException.printStackTrace();
+                            logger.log(Level.ERROR, "Interrupted Exception");
                         }
                         draw();
                     }
@@ -264,9 +280,8 @@ public class FormHarbor extends JPanel
                             {
                                 JOptionPane.showMessageDialog(null, "Collection saved successfully.");
                             }
-                        } catch (FileNotFoundException fileNotFoundException)
-                        {
-                            fileNotFoundException.printStackTrace();
+                        } catch (Exception exception) {
+                            logger.log(Level.FATAL, "Fatal unexpected error");
                         }
                     }
                     break;
@@ -280,9 +295,14 @@ public class FormHarbor extends JPanel
                             {
                                 JOptionPane.showMessageDialog(null, "Collection loaded successfully.");
                             }
-                        } catch (FileNotFoundException fileNotFoundException)
-                        {
-                            fileNotFoundException.printStackTrace();
+                        } catch (HarborOverflowException dockOverflowException) {
+                            logger.log(Level.WARN, "Harbor overflow exception");
+                            JOptionPane.showMessageDialog(null, "Harbor overflow", "Waring", JOptionPane.WARNING_MESSAGE);
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            logger.log(Level.ERROR, "File was not found");
+                            JOptionPane.showMessageDialog(null, "File was not found", "Error", JOptionPane.ERROR_MESSAGE);
+                        } catch (Exception exception) {
+                            logger.log(Level.FATAL, "Fatal unexpected error");
                         }
                     }
                     try
@@ -303,52 +323,58 @@ public class FormHarbor extends JPanel
                             {
                                 JOptionPane.showMessageDialog(null, "Harbor saved successfully.");
                             }
-                        } catch (FileNotFoundException fileNotFoundException)
-                        {
-                            fileNotFoundException.printStackTrace();
+                        } catch (Exception exception) {
+                            logger.log(Level.FATAL, "Fatal unexpected error");
                         }
                     }
                     break;
                 case "LoadHarbor":
-                    if (dialog.showDialog(null, "Load File") == JFileChooser.APPROVE_OPTION)
-                    {
+                    if(dialog.showDialog(null, "Load File") == JFileChooser.APPROVE_OPTION) {
                         File file = dialog.getSelectedFile();
-                        try
-                        {
-                            if (harborCollection.loadDataFromHarbor(file.getAbsolutePath()))
-                            {
-                                JOptionPane.showMessageDialog(null, "Harbor loaded successfully.");
+                        try {
+                            if(harborCollection.loadDataFromHarbor(file.getAbsolutePath())){
+                                JOptionPane.showMessageDialog(null, "Harbor loaded successfully");
                             }
-                        } catch (FileNotFoundException fileNotFoundException)
-                        {
-                            fileNotFoundException.printStackTrace();
+                            harbor.draw(harbor.getGraphics());
+                        } catch (HarborOverflowException dockOverflowException) {
+                            logger.log(Level.WARN, "Harbor overflow exception");
+                            JOptionPane.showMessageDialog(null, "Harbor overflow", "Waring", JOptionPane.WARNING_MESSAGE);
+                        } catch (FileNotFoundException fileNotFoundException) {
+                            logger.log(Level.ERROR, "File not found");
+                            JOptionPane.showMessageDialog(null, "File not found", "Error", JOptionPane.ERROR_MESSAGE);
+                        } catch (Exception exception) {
+                            logger.log(Level.FATAL, "Fatal unexpected error");
                         }
-                    }
-                    try
-                    {
-                        harbor.draw(harbor.getGraphics());
-                    } catch (NullPointerException ex)
-                    {
-                        return;
                     }
                     break;
             }
         }
     }
 
-    public void addBoat(Vehicle boat)
+    public void addBoat(Vehicle boat) throws HarborOverflowException
     {
         if (boat != null)
         {
-            int index = harbor.add(harbor, boat);
-            if (index > -1)
+            try
             {
-                harbor.add(boat);
-            } else
-            {
-                JOptionPane.showMessageDialog(null, "Harbor is full!");
+                if (harbor.add(harbor, boat) > -1)
+                {
+                    harbor.add(boat);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(null, "Harbor is full!");
+                }
+                harbor.draw(harbor.getGraphics());
+            } catch (HarborOverflowException dockOverflowException) {
+                logger.log(Level.WARN, "Harbor overflow exception");
+                JOptionPane.showMessageDialog(null, "Harbor is full", "Warning", JOptionPane.WARNING_MESSAGE);
+            } catch (NullPointerException nullPointerException) {
+                logger.log(Level.ERROR, "Harbor has already been created or chosen");
+                JOptionPane.showMessageDialog(null, "Harbor is not created or chosen", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception exception) {
+                logger.log(Level.FATAL, "Fatal unexpected error");
             }
-            harbor.draw(harbor.getGraphics());
         }
     }
 
