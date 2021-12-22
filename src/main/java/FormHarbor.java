@@ -7,15 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Random;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 
 public class FormHarbor extends JPanel
 {
     private JButton buttonCreateBoat, buttonTakeBoat, buttonAddHarbor, buttonDelHarbor, buttonRemovedBoat;
     private JFrame frame;
-    private JPanel mainPanel;
     private Container panelElements;
     private JFormattedTextField textFieldPlace;
     private JTextField textFieldHarborName;
@@ -99,7 +96,7 @@ public class FormHarbor extends JPanel
                 harbor.setBackground(new Color(0, 0, 0, 0));
                 panelElements.add(harbor);
                 harbor.setLayout(null);
-                logger.log(Level.INFO, "Moving on to harbor: " + harbor.getName());
+                logger.log(Level.INFO, "Moving onto harbor: " + harbor.getName());
                 draw();
             }
         });
@@ -198,7 +195,6 @@ public class FormHarbor extends JPanel
                     catch (HarborNotFoundException harborNotFoundException)
                     {
                         logger.log(Level.WARN, "Harbor is not found: "+Integer.parseInt(textFieldPlace.getText()));
-                        /*logger.log(Level.FATAL, "TEST");*/
                         JOptionPane.showMessageDialog(null, "Harbor is not found", "Warning!", JOptionPane.WARNING_MESSAGE);
                     }
                     catch (NumberFormatException numberFormatException) {
@@ -295,7 +291,7 @@ public class FormHarbor extends JPanel
                             {
                                 JOptionPane.showMessageDialog(null, "Collection loaded successfully.");
                             }
-                        } catch (HarborOverflowException dockOverflowException) {
+                        } catch (HarborOverflowException harborOverflowException) {
                             logger.log(Level.WARN, "Harbor overflow exception");
                             JOptionPane.showMessageDialog(null, "Harbor overflow", "Waring", JOptionPane.WARNING_MESSAGE);
                         } catch (FileNotFoundException fileNotFoundException) {
@@ -336,7 +332,7 @@ public class FormHarbor extends JPanel
                                 JOptionPane.showMessageDialog(null, "Harbor loaded successfully");
                             }
                             harbor.draw(harbor.getGraphics());
-                        } catch (HarborOverflowException dockOverflowException) {
+                        } catch (HarborOverflowException harborOverflowException) {
                             logger.log(Level.WARN, "Harbor overflow exception");
                             JOptionPane.showMessageDialog(null, "Harbor overflow", "Waring", JOptionPane.WARNING_MESSAGE);
                         } catch (FileNotFoundException fileNotFoundException) {
@@ -366,7 +362,7 @@ public class FormHarbor extends JPanel
                     JOptionPane.showMessageDialog(null, "Harbor is full!");
                 }
                 harbor.draw(harbor.getGraphics());
-            } catch (HarborOverflowException dockOverflowException) {
+            } catch (HarborOverflowException harborOverflowException) {
                 logger.log(Level.WARN, "Harbor overflow exception");
                 JOptionPane.showMessageDialog(null, "Harbor is full", "Warning", JOptionPane.WARNING_MESSAGE);
             } catch (NullPointerException nullPointerException) {
