@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.util.Iterator;
 
-public class Sailboat extends Boat
+public class Sailboat extends Boat implements Iterator<String>
 {
     // Дополнительный класс для отрисовки парусов (усложн.)
     InterAdd interAdd;
@@ -80,7 +81,19 @@ public class Sailboat extends Boat
         return this.Sails;
     }
 
-    private int sailsNumAndShape = 3;
+    private int SailsNumAndShape = 3;
+
+    private final int sailsCount = 0;
+
+    private int current = -1, sailsID = -1;
+
+    public int getSailsID() {
+        return this.sailsID;
+    }
+
+    public int getSailsCount() {
+        return this.sailsCount;
+    }
 
     // Конструктор
     public Sailboat(int maxSpeed, float weight, Color mainColor, Color secondaryColor, boolean front, boolean back,
@@ -92,19 +105,24 @@ public class Sailboat extends Boat
         this.Back = back;
         this.Anchor = anchor;
         this.Sails = sails;
+        this.SailsNumAndShape = sailsNumAndShape;
+        // Идентификатор
 
         switch (ID)
         {
             case 1: // Number
                 interAdd = new SailsNum();
+                sailsID = 1;
                 interAdd.setSailsNumAndShape(sailsNumAndShape);
                 break;
             case 2: // Vertical
                 interAdd = new SailsShapeVertical();
+                sailsID = 2;
                 interAdd.setSailsNumAndShape(sailsNumAndShape);
                 break;
             case 3: // Horizontal
                 interAdd = new SailsShapeHorizontal();
+                sailsID = 3;
                 interAdd.setSailsNumAndShape(sailsNumAndShape);
                 break;
         }
@@ -126,7 +144,7 @@ public class Sailboat extends Boat
             Anchor = Boolean.parseBoolean(strs[6]);
             Sails = Boolean.parseBoolean(strs[7]);
             interAdd = new SailsNum();
-            interAdd.setSailsNumAndShape(sailsNumAndShape);
+            interAdd.setSailsNumAndShape(SailsNumAndShape);
         }
     }
 
@@ -144,12 +162,8 @@ public class Sailboat extends Boat
             g2D.setStroke(new BasicStroke(1));
 
             // Массив точек для заливки границ передней части
-            int[] ptsFrontX = {
-                    _startPosX + 190, _startPosX + 150, _startPosX + 150, _startPosX + 150
-            };
-            int[] ptsFrontY = {
-                    _startPosY + 20, _startPosY + 15, _startPosY + 20, _startPosY + 25
-            };
+            int[] ptsFrontX = { _startPosX + 190, _startPosX + 150, _startPosX + 150, _startPosX + 150 };
+            int[] ptsFrontY = { _startPosY + 20, _startPosY + 15, _startPosY + 20, _startPosY + 25 };
 
             g2D.setColor(MainColor);
             g2D.fillPolygon(ptsFrontX, ptsFrontY, 4);
@@ -198,6 +212,116 @@ public class Sailboat extends Boat
     public String toString()
     {
         String res = super.toString();
-        return res + separator + super.toHexString(SecondaryColor) + separator + Front + separator + Back + separator + Anchor + separator + Sails + separator + sailsNumAndShape;
+        return res + separator + super.toHexString(
+                SecondaryColor) + separator + Front + separator + Back + separator + Anchor + separator + Sails + separator + SailsNumAndShape;
+    }
+
+    public boolean equals(Object obj)
+    {
+        if (obj == null)
+        {
+            return false;
+        }
+        if (!(obj instanceof Sailboat))
+        {
+            return false;
+        }
+        else
+        {
+            return equals((Sailboat) obj);
+        }
+    }
+
+    public boolean equals(Sailboat other)
+    {
+        if (MaxSpeed != other.MaxSpeed)
+        {
+            return false;
+        }
+        else if (Weight != other.Weight)
+        {
+            return false;
+        }
+        else if (MainColor != other.MainColor)
+        {
+            return false;
+        }
+        else if (Front != other.Front)
+        {
+            return false;
+        }
+        else if (Back != other.Back)
+        {
+            return false;
+        }
+        else if (Anchor != other.Anchor)
+        {
+            return false;
+        }
+        else if (sailsID != other.sailsID)
+        {
+            return false;
+        }
+        else if (sailsCount != other.sailsCount)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean hasNext()
+    {
+        int specsCounter = 9;
+        if (current <= specsCounter - 1)
+        {
+            current++;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String next()
+    {
+        if (current == 0)
+        {
+            return "Weight: " + Weight;
+        }
+        else if (current == 1)
+        {
+            return "MaxSpeed: " + MaxSpeed;
+        }
+        else if (current == 2)
+        {
+            return "MainColor: " + MainColor;
+        }
+        else if (current == 3)
+        {
+            return "SecondaryColor: " + SecondaryColor;
+        }
+        else if (current == 4)
+        {
+            return "Front: " + Front;
+        }
+        else if (current == 5)
+        {
+            return "Back: " + Back;
+        }
+        else if (current == 6)
+        {
+            return "Anchor: " + Anchor;
+        }
+        else if (current == 7)
+        {
+            return "sailsID: " + sailsID;
+        }
+        return "sailsCount: " + sailsCount;
+    }
+
+    @Override
+    public void remove()
+    {
+        current = -1;
     }
 }

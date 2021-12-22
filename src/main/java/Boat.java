@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.util.Iterator;
 
-public class Boat extends Vehicle
+public class Boat extends Vehicle implements Iterator<String>
 {
     // Ширина отрисовки лодки
     private final int boatWidth = 200;
@@ -16,6 +17,10 @@ public class Boat extends Vehicle
 
     // Основной цвет лодки
     public Color MainColor;
+
+    private int current = -1;
+
+    private final int specsCounter = 3;
 
     // Разделитель
     protected final char separator = ';';
@@ -134,6 +139,63 @@ public class Boat extends Vehicle
     public String toString()
     {
         return String.valueOf(MaxSpeed) + separator + Weight + separator + toHexString(MainColor);
+    }
+    public boolean equals(Boat other) {
+        if (other == null) {
+            return false;
+        }
+        if(!Boat.class.getName().equals(other.getClass().getName())) {
+            return false;
+        }
+        if (MaxSpeed != other.MaxSpeed) {
+            return false;
+        }
+        if (Weight != other.Weight) {
+            return false;
+        }
+        if (MainColor != other.MainColor) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Boat)) {
+            return false;
+        }
+        else {
+            return equals((Boat)obj);
+        }
+    }
+
+    @Override
+    public boolean hasNext() {
+        if(current <= specsCounter - 1){
+            current++;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String next() {
+        if(current == 0){
+            return "Weight: "+ Weight;
+        }
+        else if(current == 1){
+            return "MaxSpeed: "+MaxSpeed;
+        }
+        else{
+            return "MainColor: "+MainColor;
+        }
+    }
+
+    @Override
+    public void remove() {
+        current = -1;
     }
 
 }

@@ -318,7 +318,6 @@ public class FormBoatConfig extends JFrame
         // Обработка нажатия кнопки "Append"
         buttonAppend.addActionListener(ActionEvent ->
         {
-
             try
             {
                 parentFrame.addBoat((Vehicle) pictureBoat);
@@ -327,8 +326,6 @@ public class FormBoatConfig extends JFrame
             {
                 e.printStackTrace();
             }
-
-
             formConfig.setVisible(false);
             formConfig.dispose();
         });

@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
 {
@@ -25,6 +26,8 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
     // Имя гавани
     private String name;
 
+    private int current = -1;
+
     // Конструктор
     public Harbor(int picWidth, int picHeight)
     {
@@ -34,19 +37,21 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
         _places = new ArrayList<>();
     }
 
-    public int add(Harbor<T, U> p, T boat) throws HarborOverflowException
+    public boolean add(Harbor<T, U> p, T boat) throws HarborOverflowException, HarborAlreadyHaveException
     {
         if (p._maxCount <= p._places.size())
         {
             throw new HarborOverflowException();
         }
-
-        for (int i = 0; i < p._places.size() + 1; i++)
+        if (_places.contains(boat))
         {
-            p._places.add(boat);
-            return p._places.indexOf(boat);
+            JOptionPane.showMessageDialog(null, "This boat already exists");
+            throw new HarborAlreadyHaveException();
         }
-        return -1;
+        else {
+            p._places.add(boat);
+        }
+        return false;
     }
 
     public T del(Harbor<T, U> p, int index) throws HarborNotFoundException
@@ -58,8 +63,7 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
             removedBoat = p._places.get(index);
             p._places.remove(index);
             return removedBoat;
-        }
-        else
+        } else
         {
             throw new HarborNotFoundException(index);
         }
@@ -131,7 +135,7 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
             if (_places.get(i) != null)
             {
                 _places.get(i).setPosition(20 + i % 3 * _placeSizeWidth, i / 3 * _placeSizeHeight + 20, pictureWidth,
-                                           pictureHeight);
+                        pictureHeight);
                 _places.get(i).drawTransport(g);
             }
         }
@@ -148,16 +152,26 @@ public class Harbor<T extends ITransport, U extends InterAdd> extends JPanel
             for (int j = 0; j < pictureHeight / _placeSizeHeight + 1; ++j)
             { // Линия разметки места
                 g.drawLine(i * _placeSizeWidth, j * _placeSizeHeight, i * _placeSizeWidth + _placeSizeWidth / 2,
-                           j * _placeSizeHeight);
+                        j * _placeSizeHeight);
             }
             g.drawLine(i * _placeSizeWidth, 0, i * _placeSizeWidth,
-                       (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
+                    (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
         }
     }
 
     public T indexer(int index)
     {
         return _places.get(index);
+    }
+
+    public void myClear()
+    {
+        _places.clear();
+    }
+
+    public void sort()
+    {
+        _places.sort((Comparator<? super T>) new BoatComparer());
     }
 }
 

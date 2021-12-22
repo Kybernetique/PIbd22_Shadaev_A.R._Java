@@ -2,10 +2,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class HarborCollection
 {
@@ -78,24 +75,15 @@ public class HarborCollection
         File file = new File(filename);
         PrintWriter writer = new PrintWriter(file);
         writer.println("HarborCollection");
-        ITransport boat;
-        for (Map.Entry<String, Harbor<ITransport, InterAdd>> harbor : harborStages.entrySet())
-        {
-            ArrayList<ITransport> list = harbor.getValue().get_places();
-            for (int i = 0; i < list.size(); i++)
-            {
-                writer.println("Harbor" + separator + harbor.getKey());
-                boat = harbor.getValue().indexer(i);
-                if (boat != null)
-                {
-                    if (boat.getClass().equals(Boat.class))
-                    {
-                        writer.println("Boat" + separator + boat);
-                    }
-                    if (boat.getClass().equals(Sailboat.class))
-                    {
-                        writer.println("Sailboat" + separator + boat);
-                    }
+        for(Map.Entry<String, Harbor<ITransport, InterAdd>> harbor : harborStages.entrySet()){
+            writer.println("Harbor"+separator+harbor.getKey());
+            List<ITransport> list = harbor.getValue().get_places();
+            for(ITransport boat : list){
+                if(boat.getClass().equals(Boat.class)){
+                    writer.println("Boat"+separator+boat.toString());
+                }
+                if(boat.getClass().equals(Sailboat.class)){
+                    writer.println("Sailboat"+separator+boat.toString());
                 }
             }
         }
@@ -104,7 +92,8 @@ public class HarborCollection
     }
 
     // Метод для загрузки всех гаваней
-    public boolean loadData(String filename) throws FileNotFoundException, HarborOverflowException
+    public boolean loadData(String filename)
+            throws FileNotFoundException, HarborOverflowException, HarborAlreadyHaveException
     {
         Vehicle boat;
         File file = new File(filename);
@@ -129,21 +118,15 @@ public class HarborCollection
             else if (line.split(String.valueOf(separator))[0].equals("Boat"))
             {
                 boat = new Boat(line.split(String.valueOf(separator))[1]);
-                int result = harborStages.get(key).add(harborStages.get(key), boat);
-                if (result < 0)
-                {
+                boolean result = harborStages.get(key).add(harborStages.get(key), boat);
                     return false;
-                }
-                harborStages.get(key).add(boat);
+
             }
             else if (line.split(String.valueOf(separator))[0].equals("Sailboat"))
             {
                 boat = new Sailboat(line.split(String.valueOf(separator))[1]);
-                int result = harborStages.get(key).add(harborStages.get(key), boat);
-                if (result < 0)
-                {
-                    return false;
-                }
+                boolean result = harborStages.get(key).add(harborStages.get(key), boat);
+
                 harborStages.get(key).add(boat);
             }
         }
@@ -155,29 +138,14 @@ public class HarborCollection
     {
         File file = new File(filename);
         PrintWriter writer = new PrintWriter(file);
-        if (harbor != null)
-        {
-            writer.println("Harbor" + separator + harbor.getName());
-            ArrayList<ITransport> list = harbor.get_places();
-            ITransport boat;
-            for (int i = 0; i < list.size(); i++)
-            {
-                boat = harbor.indexer(i);
-                if (boat != null)
-                {
-                    if (boat.getClass().equals(Boat.class))
-                    {
-                        writer.println("Boat" + separator + boat);
-                    }
-                    if (boat.getClass().equals(Sailboat.class))
-                    {
-                        writer.println("Sailboat" + separator + boat);
-                    }
-                }
-                else
-                {
-                    return false;
-                }
+        writer.println("Harbor"+separator+harbor.getName());
+        ArrayList<ITransport> list = harbor.get_places();
+        for(ITransport boat : list){
+            if(boat.getClass().equals(Boat.class)){
+                writer.println("Boat"+separator+ boat);
+            }
+            if(boat.getClass().equals(Sailboat.class)){
+                writer.println("Sailboat"+separator+ boat);
             }
         }
         writer.close();
@@ -185,7 +153,8 @@ public class HarborCollection
     }
 
     // Метод для загрузки отдельной гавани
-    public boolean loadDataFromHarbor(String filename) throws FileNotFoundException, HarborOverflowException
+    public boolean loadDataFromHarbor(String filename)
+            throws FileNotFoundException, HarborOverflowException, HarborAlreadyHaveException
     {
         Vehicle boat;
         File file = new File(filename);
@@ -213,21 +182,15 @@ public class HarborCollection
             else if (line.split(String.valueOf(separator))[0].equals("Boat"))
             {
                 boat = new Boat(line.split(String.valueOf(separator))[1]);
-                int result = harborStages.get(key).add(harborStages.get(key), boat);
-                if (result < 0)
-                {
-                    return false;
-                }
+                boolean result = harborStages.get(key).add(harborStages.get(key), boat);
+
                 harborStages.get(key).add(boat);
             }
             else if (line.split(String.valueOf(separator))[0].equals("Sailboat"))
             {
                 boat = new Sailboat(line.split(String.valueOf(separator))[1]);
-                int result = harborStages.get(key).add(harborStages.get(key), boat);
-                if (result < 0)
-                {
-                    return false;
-                }
+                boolean result = harborStages.get(key).add(harborStages.get(key), boat);
+
                 harborStages.get(key).add(boat);
             }
         }
